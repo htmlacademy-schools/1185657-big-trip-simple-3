@@ -55,7 +55,7 @@ const createCreationFormTemplate = (tripPoint) => {
               <input id="event-type-ship-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="ship">
               <label class="event__type-label  event__type-label--ship" for="event-type-ship-1">Ship</label>
             </div>
-            <div class="event__type-item">
+            <div class="event__type-asdaditem">
               <input id="event-type-drive-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="drive">
               <label class="event__type-label  event__type-label--drive" for="event-type-drive-1">Drive</label>
             </div>
