@@ -18,15 +18,38 @@ export default class Presenter {
   init() {
     // Get random data from model
 
+    const changeEditMode = (elementToHide, elementToShow) => {
+      this.tripPointsListElement.element.replaceChild(elementToShow, elementToHide);
+    };
+
     render(new SortingElement(), this.container);
     render(this.tripPointsListElement, this.container);
 
-    render(new CreationFormElement(this.points[0]), this.tripPointsListElement.getElement());
-    render(new TripPointElement(this.points[0]), this.tripPointsListElement.getElement());
-    render(new EditFormElement(this.points[0]), this.tripPointsListElement.getElement());
-
     for (let i = 0; i < this.points.length; i++) {
-      render(new TripPointElement(this.points[i]), this.tripPointsListElement.getElement());
+      const pointElement = new TripPointElement(this.points[i]);
+      const editElement = new EditFormElement(this.points[i]);
+      pointElement.getElement().querySelector('.event__rollup-btn').addEventListener('click', () => {
+        if (this.tripPointsListElement.element.querySelectorAll('.event--edit').length === 0) {
+          changeEditMode(pointElement.getElement(), editElement.getElement());
+        }
+      });
+      editElement.getElement().querySelector('.event__rollup-btn').addEventListener('click', () => {
+        changeEditMode(editElement.getElement(), pointElement.getElement());
+      });
+
+      editElement.getElement().querySelector('.event--edit').addEventListener('submit', (evt) => {
+        evt.preventDefault();
+        changeEditMode(editElement.getElement(), pointElement.getElement());
+      });
+
+      editElement.getElement().querySelector('.event--edit').addEventListener('reset', (evt) => {
+        evt.preventDefault();
+        this.tripPointsListElement.element.removeChild(editElement.getElement());
+        editElement.removeElement();
+        pointElement.removeElement();
+      });
+
+      render(pointElement, this.tripPointsListElement.getElement());
     }
 
   }
