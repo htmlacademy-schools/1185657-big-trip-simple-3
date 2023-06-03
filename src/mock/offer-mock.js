@@ -1,21 +1,52 @@
-import { getRandomDescription, getRandomPrice, getRandomId } from '../utils';
+function generateRandomOffer() {
+  const id = Math.floor(Math.random() * 1000) + 1;
+  const titles = ['Upgrade', 'Luxury', 'Exclusive', 'Adventure'];
+  const title = titles[Math.floor(Math.random() * titles.length)];
+  const price = Math.floor(Math.random() * 500) + 50;
 
+  const offer = {
+    id: id,
+    title: title,
+    price: price
+  };
 
-const getRandomOffer = () => ({
-  id: getRandomId(),
-  title: getRandomDescription().slice(0, 6),
-  price: getRandomPrice()
-});
+  return offer;
+}
 
-const getRandomOffers = () => {
-  const numOffers = Math.floor(Math.random() * 5) + 1;
+function generateRandomOffers() {
+  const numOffers = Math.floor(Math.random() * 7);
   const offers = [];
+  const generatedIds = [];
 
-  for (let i = 0; i < numOffers; i++) {
-    offers.push(getRandomOffer());
+  while (offers.length < numOffers) {
+    const offer = generateRandomOffer();
+    if (!generatedIds.includes(offer.id)) {
+      generatedIds.push(offer.id);
+      offers.push(offer);
+    }
   }
 
-  return offers;
-};
+  return offers.sort((a, b) => a.id - b.id);
+}
 
-export { getRandomOffers };
+
+function generateRandomList() {
+  const types = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
+  const list = [];
+
+  for (let i = 0; i < types.length; i++) {
+    const type = types[i];
+    const offers = generateRandomOffers();
+
+    const item = {
+      type: type,
+      offers: offers
+    };
+
+    list.push(item);
+  }
+
+  return list;
+}
+
+export { generateRandomList };
