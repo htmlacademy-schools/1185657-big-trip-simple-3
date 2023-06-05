@@ -168,6 +168,7 @@ export default class CreatePointComponent extends AbstractView {
     this.#offers = offers;
     this.#biggestOfferId = biggestPointId;
   }
+  //
 
   get template() {
     return createFormTemplate(this.#destinations, this.#offers, this.#biggestOfferId);
