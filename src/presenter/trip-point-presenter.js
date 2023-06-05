@@ -1,4 +1,5 @@
 import { remove, render } from '../framework/render.js';
+import { serverTripPoints } from '../main.js';
 import EditPointView from '../view/edit-point-view.js';
 import TripPointView from '../view/trip-point-view.js';
 import { listOfPointPresenters } from './page-presenter.js';
@@ -40,11 +41,24 @@ export default class TripPointPresenter {
 
       this.#tripPointEditComponent.element.querySelector('.event--edit').addEventListener('reset', (e) => {
         e.preventDefault();
+        serverTripPoints.deleteTripPoint(tripPoint);
         this.#tripPointEditComponent.clearPickers();
         listOfPointPresenters.splice(listOfPointPresenters.indexOf(this), 1);
         remove(this.#tripPointComponent);
         remove(this.#tripPointEditComponent);
         this.#tripPointEditComponent = null;
+        if (document.querySelector('.trip-events__item') === null) {
+          if (document.querySelector('#filter-everything').checked) {
+            document.querySelector('.trip-events__msg').textContent = 'Click New Event to create your first point';
+          } else {
+            document.querySelector('.trip-events__msg').textContent = 'There are no future events now';
+          }
+          document.querySelector('.trip-events__msg').classList.remove('visually-hidden');
+          document.querySelector('.trip-events__trip-sort').classList.add('visually-hidden');
+        } else {
+          document.querySelector('.trip-events__msg').classList.add('visually-hidden');
+          document.querySelector('.trip-events__trip-sort').classList.remove('visually-hidden');
+        }
       });
 
       const typeFieldset = this.#tripPointEditComponent.element.querySelector('.event__type-group');
@@ -69,11 +83,24 @@ export default class TripPointPresenter {
       this.#tripPointEditComponent.element.querySelector('.event--edit').addEventListener('submit', (e) => {
         e.preventDefault();
         if (this.#tripPointEditComponent.getDataToUpdatePoint().destination !== -1) {
+          serverTripPoints.updateTripPoint(this.#tripPointEditComponent.getDataToUpdatePoint());
           this.#tripPointComponent.updateTripPoint(this.#tripPointEditComponent.getDataToUpdatePoint());
           changeVisibility(this.#tripPointEditComponent.element, this.#tripPointComponent.element);
           this.#tripPointEditComponent.clearPickers();
           remove(this.#tripPointEditComponent);
           this.#tripPointEditComponent = null;
+          if (document.querySelector('.trip-events__item') === null) {
+            if (document.querySelector('#filter-everything').checked) {
+              document.querySelector('.trip-events__msg').textContent = 'Click New Event to create your first point';
+            } else {
+              document.querySelector('.trip-events__msg').textContent = 'There are no future events now';
+            }
+            document.querySelector('.trip-events__msg').classList.remove('visually-hidden');
+            document.querySelector('.trip-events__trip-sort').classList.add('visually-hidden');
+          } else {
+            document.querySelector('.trip-events__msg').classList.add('visually-hidden');
+            document.querySelector('.trip-events__trip-sort').classList.remove('visually-hidden');
+          }
         }
       });
 
