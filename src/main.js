@@ -1,13 +1,14 @@
-import FiltersElement from './view/filters.js';
-import {render} from './render.js';
-import Presenter from './presenter/presenter.js';
+import { generateRandomDestinations } from './mock/destination-mock';
+import { generateRandomList } from './mock/offer-mock';
+import { generateRandomTripPoints } from './mock/trip-point-mock';
+import PagePresenter from './presenter/page-presenter';
 
 
-const main = document.querySelector('.page-body__page-main');
-const pageContainer = main.querySelector('.trip-events');
-const siteFilterElement = document.querySelector('.trip-controls__filters');
-const presenter = new Presenter({container: pageContainer});
+const pageContainer = document.querySelector('.trip-events');
+const destinations = generateRandomDestinations();
+const offers = generateRandomList();
+const tripPoints = generateRandomTripPoints(destinations, offers);
 
-render(new FiltersElement(), siteFilterElement);
+const pagePresenter = new PagePresenter(pageContainer);
+pagePresenter.init(tripPoints, destinations, offers);
 
-presenter.init();
