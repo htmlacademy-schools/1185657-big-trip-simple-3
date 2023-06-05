@@ -12,7 +12,6 @@ const serverTripPoints = new TripPointApiService('https://18.ecmascript.pages.ac
 const noPointViewPresenter = new NoPointViewPresenter(document.querySelector('.trip-events'));
 noPointViewPresenter.init();
 serverTripPoints.tripPoints.then((badFormatPoints) => {
-  console.log(badFormatPoints);
   const formattedListPoints = [];
   badFormatPoints.forEach((i) => {
     const tripPoint = {
