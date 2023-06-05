@@ -28,14 +28,14 @@ export default class TripPointApiService extends ApiService {
 
   async addTripPoint(tripPoint) {
     const tripPointToServer = {
-      base_price: isNaN(tripPoint.basePrice) || tripPoint.basePrice === '' ? 0 : tripPoint.basePrice,
-      date_from: tripPoint.dateFrom,
-      date_to: tripPoint.dateTo,
-      destination: tripPoint.destination,
-      id: tripPoint.id.toString(),
-      is_favourite: false,
-      offers: tripPoint.offers,
-      type: tripPoint.type
+      'base_price': tripPoint.basePrice,
+      'date_from': tripPoint.dateFrom,
+      'date_to': tripPoint.dateTo,
+      'destination': tripPoint.destination,
+      'id': tripPoint.id.toString(),
+      'is_favourite': false,
+      'offers': tripPoint.offers,
+      'type': tripPoint.type
     };
 
     const response = await this._load({
@@ -52,14 +52,14 @@ export default class TripPointApiService extends ApiService {
 
   async updateTripPoint(tripPoint) {
     const tripPointToServer = {
-      base_price: isNaN(tripPoint.basePrice) || tripPoint.basePrice === '' ? 0 : tripPoint.basePrice,
-      date_from: tripPoint.dateFrom,
-      date_to: tripPoint.dateTo,
-      destination: tripPoint.destination,
-      id: tripPoint.id.toString(),
-      is_favourite: false,
-      offers: tripPoint.offers,
-      type: tripPoint.type
+      'base_price': tripPoint.basePrice,
+      'date_from': tripPoint.dateFrom,
+      'date_to': tripPoint.dateTo,
+      'destination': tripPoint.destination,
+      'id': tripPoint.id.toString(),
+      'is_favourite': false,
+      'offers': tripPoint.offers,
+      'type': tripPoint.type
     };
 
     const response = await this._load({
