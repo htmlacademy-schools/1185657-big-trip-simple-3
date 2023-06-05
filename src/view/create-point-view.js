@@ -2,7 +2,8 @@ import AbstractView from '../framework/view/abstract-view';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import { remove } from '../framework/render';
-//asdasd
+import { listOfPointPresenters } from '../presenter/page-presenter';
+
 function createFormTemplate(destinations, offers, biggestPointId) {
   const newPointId = biggestPointId + 1;
   const type = 'flight';
@@ -233,9 +234,9 @@ export default class CreatePointComponent extends AbstractView {
       this.updateDestinationDescription(destinationField.value);
     });
 
-    this.element.querySelector('.event--edit').addEventListener('reset', (evt) => {
-      evt.preventDefault();
+    this.element.querySelector('.event--edit').addEventListener('reset', () => {
       remove(this);
+      listOfPointPresenters.splice(listOfPointPresenters.indexOf(this), 1);
     });
   }
 
