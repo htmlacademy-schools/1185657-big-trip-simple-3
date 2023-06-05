@@ -2,7 +2,7 @@ import AbstractView from '../framework/view/abstract-view';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import { remove } from '../framework/render';
-//asd
+//asdasd
 function createFormTemplate(destinations, offers, biggestPointId) {
   const newPointId = biggestPointId + 1;
   const type = 'flight';
