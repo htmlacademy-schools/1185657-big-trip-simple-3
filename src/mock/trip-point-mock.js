@@ -3,7 +3,7 @@ function generateRandomTripPoint(destinations, offersByType) {
   const dateFrom = new Date(Date.now() + Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString(); // Используем текущую дату и время как начальную дату
   const dateTo = new Date(Date.parse(dateFrom) + Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString(); // Используем дату через 1 день от текущего момента как конечную дату
   const destinationId = destinations[Math.floor(Math.random() * destinations.length)].id; // Выбираем случайный идентификатор пункта назначения
-  const id = Math.floor(Math.random() * 1000).toString(); // Генерируем случайный идентификатор от 0 до 999
+  const id = Math.floor(Math.random() * 1000); // Генерируем случайный идентификатор от 0 до 999
   const type = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'][Math.floor(Math.random() * 9)]; // Выбираем случайный тип из списка
   const typeOffers = offersByType.filter((offerByType) => offerByType.type === type); // Фильтруем офферы по выбранному типу и получаем массив идентификаторов
   let offers = typeOffers[0].offers;

@@ -1,5 +1,7 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { humanizePointEditorDueDate } from '../utils.js';
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
 
 function createTripPointTemplate(tripPoint, allDestinations, allOffers) {
   const basePrice = tripPoint.basePrice;
@@ -136,7 +138,7 @@ function createTripPointTemplate(tripPoint, allDestinations, allOffers) {
           <span class="visually-hidden">Price</span>
           &euro;
         </label>
-        <input class="event__input  event__input--price" id="event-price-${id}" type="text" name="event-price" value="${basePrice}">
+        <input class="event__input  event__input--price" id="event-price-${id}" type="text" name="event-price" value="${basePrice}" oninput="this.value = this.value.replace(/[^0-9]/g, '')" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -164,6 +166,8 @@ export default class EditPointView extends AbstractView {
   #tripPoint = null;
   #destinations = null;
   #offers = null;
+  #endTimePicker = null;
+  #startTimePicker = null;
 
   constructor(tripPoint, destinations, offers) {
     super();
@@ -177,7 +181,6 @@ export default class EditPointView extends AbstractView {
   }
 
   updateOffersDueTypeUpdate(newType) {
-    const id = this.#tripPoint.id;
     const selectedOffers = this.#tripPoint.offers;
     const type = newType;
     const offers = this.#offers;
@@ -221,19 +224,85 @@ export default class EditPointView extends AbstractView {
 
   getDataToUpdatePoint() {
     const from = this.element;
-    const basePrice = from.querySelector('.event__input--price').value.replace(/\s/g, '');
-    const dateFrom = new Date(from.querySelectorAll('.event__input--time')[0].value).toISOString();
-    const dateTo = new Date(from.querySelectorAll('.event__input--time')[1].value).toISOString();
+    const basePrice = parseInt(from.querySelector('.event__input--price').value.replace(/\s/g, ''), 10);
+    const dateFrom = from.querySelectorAll('.event__input--time')[0].value;
+    const partsFrom = dateFrom.split(/[\s/:]+/);
+    const dayFrom = partsFrom[0];
+    const monthFrom = partsFrom[1];
+    const yearFrom = partsFrom[2];
+    const hoursFrom = partsFrom[3];
+    const minutesFrom = partsFrom[4];
+    const dateFromFormatted = new Date(`20${yearFrom}-${monthFrom}-${dayFrom}T${hoursFrom}:${minutesFrom}:00`).toISOString();
+    const dateTo = from.querySelectorAll('.event__input--time')[1].value;
+    const partsTo = dateTo.split(/[\s/:]+/);
+    const dayTo = partsTo[0];
+    const monthTo = partsTo[1];
+    const yearTo = partsTo[2];
+    const hoursTo = partsTo[3];
+    const minutesTo = partsTo[4];
+    const dateToFormatted = new Date(`20${yearTo}-${monthTo}-${dayTo}T${hoursTo}:${minutesTo}:00`).toISOString();
     const type = from.querySelector('.event__type-output').textContent.replace(/\s/g, '');
     let destinationId;
-    if (this.#destinations.includes(from.querySelector('.event__input--destination').value)) {
-      destinationId = from.querySelector('.event__input--destination').value;
+    if (this.#destinations.map((i) => i.name).includes(from.querySelector('.event__input--destination').value)) {
+      destinationId = this.#destinations.filter((i) => i.name === from.querySelector('.event__input--destination').value)[0].id;
     } else {
       destinationId = -1;
     }
     const id = this.#tripPoint.id;
 
-    const offers = this.#offers.filter((i) => i.type === type)[0].offers;
-    console.log(offers);
+    const offersHtml = from.querySelectorAll('.event__offer-checkbox');
+    const selectedOffersIds = [];
+    offersHtml.forEach((i) => {
+      if (i.checked) {
+        const regex = /event-offer-\w+-(\d+)/;
+        const match = i.id.match(regex);
+        if (match) {
+          selectedOffersIds.push(parseInt(match[1], 10));
+        }
+      }
+    });
+    const tripPointToReturn = {
+      basePrice: basePrice,
+      dateFrom: dateFromFormatted,
+      dateTo: dateToFormatted,
+      destination: destinationId,
+      id: id,
+      offers: selectedOffersIds,
+      type: type
+    };
+
+    return tripPointToReturn;
+  }
+
+  addPickers() {
+    this.#endTimePicker = flatpickr(
+      this.element.querySelector(`#event-end-time-${this.#tripPoint.id}`),
+      {
+        enableTime: true,
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this.element.querySelector(`#event-end-time-${this.#tripPoint.id}`).value,
+      }
+    );
+
+    this.#startTimePicker = flatpickr(
+      this.element.querySelector(`#event-start-time-${this.#tripPoint.id}`),
+      {
+        enableTime: true,
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this.element.querySelector(`#event-start-time-${this.#tripPoint.id}`).value,
+        onClose: (selectedDates) => {
+          this.#endTimePicker.set('minDate', selectedDates[0]);
+        }
+      }
+    );
+    this.#endTimePicker.set('minDate', this.element.querySelector(`#event-start-time-${this.#tripPoint.id}`).value);
+
+  }
+
+  clearPickers() {
+    this.#endTimePicker.clear();
+    this.#endTimePicker.destroy();
+    this.#startTimePicker.clear();
+    this.#startTimePicker.destroy();
   }
 }
