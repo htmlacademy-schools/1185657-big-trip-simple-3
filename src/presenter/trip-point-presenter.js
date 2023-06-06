@@ -36,6 +36,15 @@ export default class TripPointPresenter {
         remove(this.#tripPointEditComponent);
         this.#tripPointEditComponent = null;
       });
+      document.addEventListener('keydown', (evt) => {
+        evt.preventDefault();
+        if (evt.key === 'Escape') {
+          this.changeVisibility(this.#tripPointEditComponent.element, this.#tripPointComponent.element);
+          this.#tripPointEditComponent.clearPickers();
+          remove(this.#tripPointEditComponent);
+          this.#tripPointEditComponent = null;
+        }
+      });
 
       this.#tripPointEditComponent.element.querySelector('.event--edit').addEventListener('reset', (e) => {
         e.preventDefault();
