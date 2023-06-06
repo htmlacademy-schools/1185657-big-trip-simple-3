@@ -239,6 +239,14 @@ export default class CreatePointComponent extends AbstractView {
       remove(this);
       presenters.splice(presenters.indexOf(this), 1);
     });
+
+    document.addEventListener('keydown', (evt) => {
+      evt.preventDefault();
+      if (evt.key === 'Escape') {
+        remove(this);
+        presenters.splice(presenters.indexOf(this), 1);
+      }
+    });
   }
 
   updateDestinationDescription(destinationName) {
