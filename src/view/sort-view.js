@@ -1,8 +1,8 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import CreatePointPresenter from '../presenter/create-point-presenter.js';
-import { listOfPointPresenters } from '../presenter/page-presenter.js';
+import { presenters } from '../presenter/page-presenter.js';
 
-function createSortTemplate() {
+const createSortTemplate = () => {
   const template = (`
   <form class="trip-events__trip-sort  trip-sort" action="#" method="get">
             <div class="trip-sort__item  trip-sort__item--day">
@@ -32,7 +32,7 @@ function createSortTemplate() {
           </form>
   `);
   return template;
-}
+};
 
 export default class SortView extends AbstractView {
   constructor() {
@@ -45,7 +45,7 @@ export default class SortView extends AbstractView {
 
   addListeners() {
     this.element.querySelector('#sort-day').addEventListener('click', () => {
-      function compare(a, b) {
+      const compare = (a, b) => {
         if (!(a instanceof CreatePointPresenter) && !(b instanceof CreatePointPresenter)) {
           const dateA = new Date(a.getTripPointComponent().getTripPoint().dateFrom);
           const dateB = new Date(b.getTripPointComponent().getTripPoint().dateFrom);
@@ -53,32 +53,32 @@ export default class SortView extends AbstractView {
         } else {
           return false;
         }
-      }
-      listOfPointPresenters.sort(compare);
+      };
+      presenters.sort(compare);
       document.querySelector('.trip-events__list').innerHTML = '';
       if (document.querySelector('#filter-everything').checked) {
-        listOfPointPresenters.forEach((i) => {
+        presenters.forEach((i) => {
           i.renderDueFilterUpdate();
         });
       } else {
-        const filteredList = [];
-        listOfPointPresenters.forEach((j) => {
+        const filteredPresenters = [];
+        presenters.forEach((j) => {
           if (j instanceof CreatePointPresenter ) {
-            filteredList.push(j);
+            filteredPresenters.push(j);
           } else {
             if (new Date(j.getTripPointComponent().getTripPoint().dateTo) > new Date()) {
-              filteredList.push(j);
+              filteredPresenters.push(j);
             }
           }
         });
-        filteredList.forEach((j) => {
+        filteredPresenters.forEach((j) => {
           j.renderDueFilterUpdate();
         });
       }
     });
 
     this.element.querySelector('#sort-price').addEventListener('click', () => {
-      function compare(a, b) {
+      const compare = (a, b) => {
         if (!(a instanceof CreatePointPresenter) && !(b instanceof CreatePointPresenter)) {
           const priceA = new Date(a.getTripPointComponent().getTripPoint().basePrice);
           const priceB = new Date(b.getTripPointComponent().getTripPoint().basePrice);
@@ -86,25 +86,25 @@ export default class SortView extends AbstractView {
         } else {
           return false;
         }
-      }
-      listOfPointPresenters.sort(compare);
+      };
+      presenters.sort(compare);
       document.querySelector('.trip-events__list').innerHTML = '';
       if (document.querySelector('#filter-everything').checked) {
-        listOfPointPresenters.forEach((i) => {
+        presenters.forEach((i) => {
           i.renderDueFilterUpdate();
         });
       } else {
-        const filteredList = [];
-        listOfPointPresenters.forEach((j) => {
+        const filteredPresenters = [];
+        presenters.forEach((j) => {
           if (j instanceof CreatePointPresenter ) {
-            filteredList.push(j);
+            filteredPresenters.push(j);
           } else {
             if (new Date(j.getTripPointComponent().getTripPoint().dateTo) > new Date()) {
-              filteredList.push(j);
+              filteredPresenters.push(j);
             }
           }
         });
-        filteredList.forEach((j) => {
+        filteredPresenters.forEach((j) => {
           j.renderDueFilterUpdate();
         });
       }
@@ -112,7 +112,7 @@ export default class SortView extends AbstractView {
   }
 
   goToDaySort() {
-    function compare(a, b) {
+    const compare = (a, b) => {
       if (!(a instanceof CreatePointPresenter) && !(b instanceof CreatePointPresenter)) {
         const dateA = new Date(a.getTripPointComponent().getTripPoint().dateFrom);
         const dateB = new Date(b.getTripPointComponent().getTripPoint().dateFrom);
@@ -120,25 +120,25 @@ export default class SortView extends AbstractView {
       } else {
         return false;
       }
-    }
-    listOfPointPresenters.sort(compare);
+    };
+    presenters.sort(compare);
     document.querySelector('.trip-events__list').innerHTML = '';
     if (document.querySelector('#filter-everything').checked) {
-      listOfPointPresenters.forEach((i) => {
+      presenters.forEach((i) => {
         i.renderDueFilterUpdate();
       });
     } else {
-      const filteredList = [];
-      listOfPointPresenters.forEach((j) => {
+      const filteredPresenters = [];
+      presenters.forEach((j) => {
         if (j instanceof CreatePointPresenter ) {
-          filteredList.push(j);
+          filteredPresenters.push(j);
         } else {
           if (new Date(j.getTripPointComponent().getTripPoint().dateTo) > new Date()) {
-            filteredList.push(j);
+            filteredPresenters.push(j);
           }
         }
       });
-      filteredList.forEach((j) => {
+      filteredPresenters.forEach((j) => {
         j.renderDueFilterUpdate();
       });
     }
